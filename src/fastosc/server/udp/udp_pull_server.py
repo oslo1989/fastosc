@@ -18,7 +18,7 @@ class OSCUDPPullServer(OSCUDPServerBase):
 
     def __init__(self, *, dispatcher: Dispatcher, logger: logging.Logger, local_addr: tuple[str, int]) -> None:
         super().__init__(logger=logger, dispatcher=dispatcher, local_addr=local_addr)
-        self._socket.setblocking(False)
+        self._socket.setblocking(False)  # noqa: FBT003
 
     def process(self) -> None:
         """
@@ -34,7 +34,7 @@ class OSCUDPPullServer(OSCUDPServerBase):
                 # --------------------------------------------------------------------------------
                 # This benign error seems to occur on startup on Windows
                 # --------------------------------------------------------------------------------
-                self._logger.warning("Non-fatal socket error: %s" % (traceback.format_exc()))
+                self._logger.warning(f"Non-fatal socket error: {traceback.format_exc()}")
             elif e.errno in (errno.EAGAIN, errno.EWOULDBLOCK):
                 # --------------------------------------------------------------------------------
                 # Another benign networking error, throw when no data is received
@@ -45,11 +45,11 @@ class OSCUDPPullServer(OSCUDPServerBase):
                 # --------------------------------------------------------------------------------
                 # Something more serious has happened
                 # --------------------------------------------------------------------------------
-                self._logger.error("Socket error: %s" % (traceback.format_exc()))
+                self._logger.error(f"Socket error: {traceback.format_exc()}")
 
-        except Exception as e:
-            self._logger.error("Error handling OSC message: %s" % e)
-            self._logger.warning("%s" % traceback.format_exc())
+        except Exception as e:  # noqa
+            self._logger.error(f"Error handling OSC message: {e}")
+            self._logger.warning(f"{traceback.format_exc()}")
 
     def shutdown(self) -> None:
         """

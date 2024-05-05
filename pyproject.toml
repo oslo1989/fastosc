@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools ~=69.0.3"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "fastosc"
-version = "0.0.2"
+version = "0.0.3"
 authors = [
     {name = "Martin Sahlen", email = "martin8900@gmail.com"}
 ]
@@ -23,8 +23,9 @@ Homepage = "https://github.com/oslo1989/fastosc"
 Issues = "https://github.com/oslo1989/fastosc/issues"
 
 [tool.ruff]
-select = ["E", "F", "B", "W", "I" ,"UP", "ANN", "BLE", "FBT", "A", "COM", "C4", "DTZ", "PIE", "Q", "RET", "SIM", "PL", "RUF"]
-extend-select = ["I"]
-fixable = ["ALL"]
+lint.select = ["E", "F", "B", "W", "I" ,"UP", "ANN", "BLE", "FBT", "A", "COM", "C4", "DTZ", "PIE", "Q", "RET", "SIM", "PL", "RUF"]
+lint.extend-select = ["I"]
+lint.fixable = ["ALL"]
 line-length = 120
+lint.ignore = ["ANN101"]
 target-version = "py37"

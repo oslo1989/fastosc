@@ -10,7 +10,7 @@ from fastosc.message.osc_message_builder import BuildError
 
 
 class OSCServerBase(ABC):
-    def __init__(self, logger: logging.Logger, local_addr: tuple[str, int]):
+    def __init__(self, logger: logging.Logger, local_addr: tuple[str, int]) -> None:
         self._logger = logger
         self._local_addr = local_addr
         self._logger.info("Starting OSC server (local %s)", str(self._local_addr))
@@ -23,4 +23,4 @@ class OSCServerBase(ABC):
         try:
             self._send_bytes(data=convert_message(address=address, params=params), remote_addr=remote_addr)
         except BuildError:
-            self._logger.error("OSC build error: %s" % (traceback.format_exc()))
+            self._logger.error(f"OSC build error: {traceback.format_exc()}")

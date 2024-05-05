@@ -15,7 +15,7 @@ MAX_LINE_LENGTH = 45
 
 
 class Dispatcher:
-    def __init__(self, *, logger: logging.Logger, base_address: str = ""):
+    def __init__(self, *, logger: logging.Logger, base_address: str = "") -> None:
         self._server: OSCServerBase | None = None
         self._callbacks: dict[str, Callable[[list[ArgValue], tuple[str, int]], list[ArgValue]]] = {}
         self._logger = logger
@@ -86,7 +86,12 @@ class Dispatcher:
         self._callbacks = {}
 
     def send(
-        self, *, address: str, remote_addr: tuple[str, int], params: list[ArgValue], include_base_address: bool = False
+        self,
+        *,
+        address: str,
+        remote_addr: tuple[str, int],
+        params: list[ArgValue],
+        include_base_address: bool = False,
     ) -> None:
         if self._server:
             if include_base_address:
@@ -125,7 +130,7 @@ class Dispatcher:
                         assert isinstance(rv, list)
                         self.send(address=callback_address, params=rv, remote_addr=remote_addr)
         else:
-            self._logger.error("Unknown OSC address: %s" % message.address)
+            self._logger.error(f"Unknown OSC address: {message.address}")
             # todo: return the error to the socket that sent it
 
     def process_bundle(self, *, bundle: OscBundle, remote_addr: tuple[str, int]) -> None:

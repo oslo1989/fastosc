@@ -3,8 +3,7 @@ create-venv:
 	#pyenv activate fastosc-venv-3.7.13
 
 install-deps:
-	@pip install --upgrade pip
-	@pip install -r requirements.txt
+	@pip install --upgrade pip && pip install -r requirements.txt
 
 upload-pip:
 	@rm -rf dist
@@ -21,3 +20,5 @@ lint:
 
 format:
 	@ruff format src
+
+lint-format: lint-fix format lint

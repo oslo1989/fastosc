@@ -1,8 +1,10 @@
 """Representation of an OSC message in a pythonesque way."""
+# ruff: noqa: B904,PLR0912,PLR0915,PLR2004
+
 from __future__ import annotations
 
 import logging
-from typing import Any, Iterator
+from typing import Iterator
 
 from fastosc.message.arg_value import ArgValue
 from fastosc.message.parsing import osc_types
@@ -40,31 +42,31 @@ class OscMessage:
             param_stack = [params]
             # Parse each parameter given its type.
             for param in type_tag:
-                val = NotImplemented  # type: Any
+                val = NotImplemented  # Any
                 if param == "i":  # Integer.
-                    val, index = osc_types.get_int(self._dgram, index)
+                    val, index = osc_types.get_int(self._dgram, index)  # type: ignore
                 elif param == "h":  # Int64.
-                    val, index = osc_types.get_int64(self._dgram, index)
+                    val, index = osc_types.get_int64(self._dgram, index)  # type: ignore
                 elif param == "f":  # Float.
-                    val, index = osc_types.get_float(self._dgram, index)
+                    val, index = osc_types.get_float(self._dgram, index)  # type: ignore
                 elif param == "d":  # Double.
-                    val, index = osc_types.get_double(self._dgram, index)
+                    val, index = osc_types.get_double(self._dgram, index)  # type: ignore
                 elif param == "s":  # String.
-                    val, index = osc_types.get_string(self._dgram, index)
+                    val, index = osc_types.get_string(self._dgram, index)  # type: ignore
                 elif param == "b":  # Blob.
-                    val, index = osc_types.get_blob(self._dgram, index)
+                    val, index = osc_types.get_blob(self._dgram, index)  # type: ignore
                 elif param == "r":  # RGBA.
-                    val, index = osc_types.get_rgba(self._dgram, index)
+                    val, index = osc_types.get_rgba(self._dgram, index)  # type: ignore
                 elif param == "m":  # MIDI.
-                    val, index = osc_types.get_midi(self._dgram, index)
+                    val, index = osc_types.get_midi(self._dgram, index)  # type: ignore
                 elif param == "t":  # osc time tag:
-                    val, index = osc_types.get_timetag(self._dgram, index)
+                    val, index = osc_types.get_timetag(self._dgram, index)  # type: ignore
                 elif param == "T":  # True.
-                    val = True
+                    val = True  # type: ignore
                 elif param == "F":  # False.
-                    val = False
+                    val = False  # type: ignore
                 elif param == "N":  # Nil.
-                    val = None
+                    val = None  # type: ignore
                 elif param == "[":  # Array start.
                     array: list[ArgValue] = []
                     param_stack[-1].append(array)

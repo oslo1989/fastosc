@@ -1,3 +1,4 @@
+# ruff: noqa: FBT001,FBT002
 from __future__ import annotations
 
 import inspect
@@ -56,11 +57,11 @@ def wrapper(
 
         if shape_len < arg_count:
             raise InvalidParameterValueException(
-                f"too many arguments, expected {shape_len} " f"arguments but signature has {arg_count}."
+                f"too many arguments, expected {shape_len} " f"arguments but signature has {arg_count}.",
             )
-        elif shape_len > arg_count:
+        if shape_len > arg_count:
             raise InvalidParameterValueException(
-                f"too few arguments, expected {shape_len} " f"arguments but signature has {arg_count}."
+                f"too few arguments, expected {shape_len} " f"arguments but signature has {arg_count}.",
             )
 
         # do we do someting with remote_addres?
@@ -71,7 +72,7 @@ def wrapper(
                 if not isinstance(a, t):
                     raise InvalidParameterValueException(
                         f"arg {q}{a}{q} of type <{type(a).__name__}> "  # type: ignore[str-bytes-safe]
-                        f"does not match <{t.__name__}>"
+                        f"does not match <{t.__name__}>",
                     )
             args = original_args
             if include_remote_addr:
@@ -87,7 +88,10 @@ def wrapper(
         new_f.raw_address = address  # type: ignore[attr-defined]
         new_f.__name__ = f.__name__  # type: ignore[attr-defined]
         new_f.handler_info = HandlerInfo(  # type: ignore[attr-defined]
-            shape=orignal_shape, signature=sign, doc=inspect.getdoc(f), function_name=f.__name__
+            shape=orignal_shape,
+            signature=sign,
+            doc=inspect.getdoc(f),
+            function_name=f.__name__,
         )
         return new_f
 
@@ -165,7 +169,10 @@ class OSCRouter:
         pass
 
     def _setup_listener(
-        self, h: Callable[[list[ArgValue], tuple[str, int]], list[ArgValue]], start: bool = False, stop: bool = False
+        self,
+        h: Callable[[list[ArgValue], tuple[str, int]], list[ArgValue]],
+        start: bool = False,
+        stop: bool = False,
     ) -> tuple[str, Callable[[list[ArgValue], tuple[str, int]], list[ArgValue]]]:
         if not start and not stop:
             raise InvalidParameterValueException("Need to set either stop or start for listener")
@@ -196,12 +203,11 @@ class OSCRouter:
                 else:
                     logging.info(
                         f"listener already existing for {address} and args {args} for client@{remote_address}, "
-                        f"will not add unless sending a specific callback query param trailing (|Nil|QueryId"
+                        f"will not add unless sending a specific callback query param trailing (|Nil|QueryId",
                     )
-            elif stop:
-                if key in self._listeners:
-                    self._listeners[key]()
-                    logging.info(f"listener stopped for {address} and args {args} for client@{remote_address}")
+            elif stop and key in self._listeners:
+                self._listeners[key]()
+                logging.info(f"listener stopped for {address} and args {args} for client@{remote_address}")
 
             # this will also send a message on every start / stop request
             self._dispatcher.send(
@@ -246,7 +252,7 @@ class OSCRouter:
         #     if self._song.tempo_has_listener(listener):
         #         self._song.remove_tempo_listener(listener)
 
-    def __init__(self, *, dispatcher: Dispatcher, namespace: str):
+    def __init__(self, *, dispatcher: Dispatcher, namespace: str) -> None:
         self._dispatcher = dispatcher
         if not namespace.startswith("/"):
             namespace = f"/{namespace}"

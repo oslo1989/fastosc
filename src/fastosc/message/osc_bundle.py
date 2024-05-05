@@ -1,3 +1,4 @@
+# ruff: noqa: B904,ANN401
 from __future__ import annotations
 
 import logging
@@ -34,7 +35,7 @@ class OscBundle:
         try:
             self._timestamp, index = osc_types.get_date(self._dgram, index)
         except osc_types.ParseError as pe:
-            raise ParseError("Could not get the date from the datagram: %s" % pe)
+            raise ParseError(f"Could not get the date from the datagram: {pe}")
         # Get the contents as a list of OscBundle and OscMessage.
         self._contents = self._parse_contents(index)
 
@@ -59,9 +60,9 @@ class OscBundle:
                 elif osc_message.OscMessage.dgram_is_message(content_dgram):
                     contents.append(osc_message.OscMessage(content_dgram))
                 else:
-                    logging.warning("Could not identify content type of dgram %r" % content_dgram)
+                    logging.warning(f"Could not identify content type of dgram {content_dgram!r}")
         except (osc_types.ParseError, osc_message.ParseError, IndexError) as e:
-            raise ParseError("Could not parse a content datagram: %s" % e)
+            raise ParseError(f"Could not parse a content datagram: {e}")
 
         return contents
 

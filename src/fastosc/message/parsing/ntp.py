@@ -1,4 +1,5 @@
 """Parsing and conversion of NTP dates contained in datagrams."""
+# ruff: noqa: BLE001,B904
 
 import datetime
 import struct

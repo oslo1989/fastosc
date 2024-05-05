@@ -1,4 +1,5 @@
 """Build OSC bundles for client applications."""
+# ruff: noqa: B904
 
 from __future__ import annotations
 

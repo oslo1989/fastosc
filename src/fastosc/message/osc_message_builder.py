@@ -1,4 +1,6 @@
 """Build OSC messages for client applications."""
+
+# ruff: noqa: PLR2004
 from __future__ import annotations
 
 from datetime import datetime
@@ -25,6 +27,8 @@ from fastosc.message.arg_value import (
 )
 
 from .parsing import osc_types
+
+# ruff: noqa: PLR0912,B904
 
 
 class BuildError(Exception):
@@ -61,7 +65,7 @@ class OscMessageBuilder:
     def _valid_type(self, arg_type: str) -> bool:
         if arg_type in SUPPORTED_ARG_TYPES:
             return True
-        elif isinstance(arg_type, (list, tuple)):
+        if isinstance(arg_type, (list, tuple)):
             return all(self._valid_type(sub_type) for sub_type in arg_type)
         return False
 

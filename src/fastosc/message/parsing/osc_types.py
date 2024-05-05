@@ -1,4 +1,6 @@
 """Functions to get OSC types from datagrams and vice versa"""
+
+# ruff: noqa: FBT001,FBT002,B904
 from __future__ import annotations
 
 import math
@@ -88,9 +90,9 @@ def get_string(dgram: bytes, start_index: int) -> tuple[str, int]:
         data_str = dgram[start_index : start_index + offset]
         return data_str.replace(b"\x00", b"").decode("utf-8"), start_index + offset
     except IndexError as ie:
-        raise ParseError("Could not parse datagram %s" % ie)
+        raise ParseError(f"Could not parse datagram {ie}")
     except TypeError as te:
-        raise ParseError("Could not parse datagram %s" % te)
+        raise ParseError(f"Could not parse datagram {te}")
 
 
 def write_int(val: int) -> bytes:
@@ -123,7 +125,7 @@ def get_int(dgram: bytes, start_index: int) -> tuple[int, int]:
             raise ParseError("Datagram is too short")
         return (struct.unpack(">i", dgram[start_index : start_index + _INT_DGRAM_LEN])[0], start_index + _INT_DGRAM_LEN)
     except (struct.error, TypeError) as e:
-        raise ParseError("Could not parse datagram %s" % e)
+        raise ParseError(f"Could not parse datagram {e}")
 
 
 def write_int64(val: int) -> bytes:
@@ -159,7 +161,7 @@ def get_int64(dgram: bytes, start_index: int) -> tuple[int, int]:
             start_index + _INT64_DGRAM_LEN,
         )
     except (struct.error, TypeError) as e:
-        raise ParseError("Could not parse datagram %s" % e)
+        raise ParseError(f"Could not parse datagram {e}")
 
 
 def get_uint64(dgram: bytes, start_index: int) -> tuple[int, int]:
@@ -183,7 +185,7 @@ def get_uint64(dgram: bytes, start_index: int) -> tuple[int, int]:
             start_index + _UINT64_DGRAM_LEN,
         )
     except (struct.error, TypeError) as e:
-        raise ParseError("Could not parse datagram %s" % e)
+        raise ParseError(f"Could not parse datagram {e}")
 
 
 def write_timetag(ts: float | datetime) -> bytes:
@@ -192,7 +194,6 @@ def write_timetag(ts: float | datetime) -> bytes:
         ts = ts.timestamp()
     if ts > 0:
         fract, secs = math.modf(ts)
-        secs = secs
         binary = struct.pack(">LL", secs, fract)
     else:
         binary = struct.pack(">LL", 0, 1)
@@ -225,12 +226,15 @@ def get_timetag(dgram: bytes, start_index: int) -> tuple[tuple[datetime, int], i
         minutes, seconds = seconds // 60, seconds % 60
 
         utc = datetime.combine(ntp._NTP_EPOCH, datetime.min.time()) + timedelta(
-            hours=hours, minutes=minutes, seconds=seconds, microseconds=fraction
+            hours=hours,
+            minutes=minutes,
+            seconds=seconds,
+            microseconds=fraction,
         )
 
         return (utc, fraction), start_index + _TIMETAG_DGRAM_LEN
     except (struct.error, TypeError) as e:
-        raise ParseError("Could not parse datagram %s" % e)
+        raise ParseError(f"Could not parse datagram {e}")
 
 
 def write_float(val: float) -> bytes:
@@ -269,7 +273,7 @@ def get_float(dgram: bytes, start_index: int) -> tuple[float, int]:
             start_index + _FLOAT_DGRAM_LEN,
         )
     except (struct.error, TypeError) as e:
-        raise ParseError("Could not parse datagram %s" % e)
+        raise ParseError(f"Could not parse datagram {e}")
 
 
 def write_double(val: float) -> bytes:
@@ -419,7 +423,10 @@ def get_rgba(dgram: bytes, start_index: int) -> tuple[bytes, int]:
             raise ParseError("Datagram is too short")
         return (struct.unpack(">I", dgram[start_index : start_index + _INT_DGRAM_LEN])[0], start_index + _INT_DGRAM_LEN)
     except (struct.error, TypeError) as e:
-        raise ParseError("Could not parse datagram %s" % e)
+        raise ParseError(f"Could not parse datagram {e}")
+
+
+MIDI_PACKET_LENGTH = 4
 
 
 def write_midi(val: MidiPacket) -> bytes:
@@ -431,7 +438,7 @@ def write_midi(val: MidiPacket) -> bytes:
       - BuildError if the MIDI message could not be converted.
 
     """
-    if len(val) != 4:
+    if len(val) != MIDI_PACKET_LENGTH:
         raise BuildError("MIDI message length is invalid")
     try:
         value = sum((value & 0xFF) << 8 * (3 - pos) for pos, value in enumerate(val))
@@ -460,4 +467,4 @@ def get_midi(dgram: bytes, start_index: int) -> tuple[MidiPacket, int]:
         midi_msg = cast(MidiPacket, tuple((val & 0xFF << 8 * i) >> 8 * i for i in range(3, -1, -1)))
         return (midi_msg, start_index + _INT_DGRAM_LEN)
     except (struct.error, TypeError) as e:
-        raise ParseError("Could not parse datagram %s" % e)
+        raise ParseError(f"Could not parse datagram {e}")
