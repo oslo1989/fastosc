@@ -1,3 +1,6 @@
+![pypi](https://img.shields.io/pypi/v/fastosc.svg)
+![versions](https://img.shields.io/pypi/pyversions/fastosc.svg)
+
 TODO
 
 - add example usage in ableton project to README as a reference for how to use the library

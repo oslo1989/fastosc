@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fastosc"
-version = "0.0.5"
+version = "0.0.6"
 authors = [
     {name = "Martin Sahlen", email = "martin8900@gmail.com"}
 ]
@@ -29,3 +29,9 @@ lint.fixable = ["ALL"]
 line-length = 120
 lint.ignore = ["ANN101"]
 target-version = "py37"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = ["py.typed"]
